@@ -23,7 +23,7 @@
            vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     
     <a-assets>
-      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline loop="false"></video>
+      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline loop="false" muted="false"></video>
     </a-assets>
 
     <a-camera></a-camera>
@@ -35,28 +35,34 @@
   </a-scene>
 
   <script>
+    const sceneEl = document.querySelector('a-scene');
     const playBtn = document.getElementById("playBtn");
-    const video = document.getElementById("myvideo");
+    const videoEl = document.getElementById("vid");
+    const videoEntity = document.getElementById("myvideo");
 
-    document.querySelector("a-scene").addEventListener("targetFound", () => {
-      playBtn.style.display = "block";
-    });
-
-    document.querySelector("a-scene").addEventListener("targetLost", () => {
-      playBtn.style.display = "none";
-      video.pause();
-      video.setAttribute("visible", "false");
+    // Espera a que la escena cargue
+    sceneEl.addEventListener('loaded', () => {
+      const targetEntity = document.querySelector('a-entity[mindar-image-target]');
+      targetEntity.addEventListener('targetFound', () => {
+        playBtn.style.display = "block";
+      });
+      targetEntity.addEventListener('targetLost', () => {
+        playBtn.style.display = "none";
+        videoEl.pause();
+        videoEl.currentTime = 0;
+        videoEntity.setAttribute("visible", "false");
+      });
     });
 
     playBtn.addEventListener("click", () => {
-      video.play();
-      video.setAttribute("visible", "true");
+      videoEl.play();
+      videoEntity.setAttribute("visible", "true");
       playBtn.style.display = "none";
     });
 
-    video.addEventListener("ended", () => {
+    videoEl.addEventListener("ended", () => {
       playBtn.style.display = "block";
-      video.setAttribute("visible", "false");
+      videoEntity.setAttribute("visible", "false");
     });
   </script>
 </body>
