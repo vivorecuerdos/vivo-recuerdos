@@ -17,43 +17,43 @@
 <body>
   <button id="playBtn">PLAY</button>
 
-  <a-scene embedded arjs="sourceType:webcam;trackingMethod:best;debugUIEnabled:false;" 
-           mindar-image="imageTargetSrc: target.mind; filterMinCF:0.0001; filterBeta:1000;" 
+  <a-scene embedded mindar-image="imageTargetSrc: target.mind;" 
            vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     <a-assets>
-      <video id="vid" src="video.mp4" preload="auto"></video>
+      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline></video>
     </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+    <a-camera></a-camera>
 
     <a-entity mindar-image-target="targetIndex:0">
-      <a-video src="#vid" width="1" height="0.75" position="0 0 0.05" visible="false" id="myvideo"></a-video>
+      <a-video src="#vid" width="1" height="0.75" position="0 0 0.05" 
+               rotation="0 0 0" visible="false" id="myvideo"></a-video>
     </a-entity>
   </a-scene>
 
   <script>
     const playBtn = document.getElementById("playBtn");
-    const video = document.querySelector("#myvideo");
+    const video = document.getElementById("myvideo");
 
-    document.querySelector("a-scene").addEventListener("targetFound", event => {
+    document.querySelector("a-scene").addEventListener("targetFound", () => {
       playBtn.style.display = "block";
     });
 
-    document.querySelector("a-scene").addEventListener("targetLost", event => {
+    document.querySelector("a-scene").addEventListener("targetLost", () => {
       playBtn.style.display = "none";
       video.pause();
-      video.object3D.visible = false;
+      video.setAttribute("visible", "false");
     });
 
     playBtn.addEventListener("click", () => {
       video.play();
-      video.object3D.visible = true;
+      video.setAttribute("visible", "true");
       playBtn.style.display = "none";
     });
 
     video.addEventListener("ended", () => {
       playBtn.style.display = "block";
-      video.object3D.visible = false;
+      video.setAttribute("visible", "false");
     });
   </script>
 </body>
