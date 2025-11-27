@@ -68,7 +68,7 @@
     <a-assets>
       <video
         id="video-real"
-        src="video.mp4"
+        src="video2.mp4"
         preload="auto"
         playsinline
         webkit-playsinline
@@ -79,9 +79,9 @@
     <!-- Cámara -->
     <a-camera position="0 0 0"></a-camera>
 
-    <!-- Target de MindAR: se engancha a target.png / target.png.mind -->
+    <!-- Target de MindAR -->
     <a-entity mindar-image-target="targetIndex: 0">
-      <!-- Plano donde se pinta el video encima de la foto -->
+      <!-- Plano donde se pinta el video -->
       <a-video
         id="video-plane"
         src="#video-real"
@@ -97,19 +97,19 @@
   <script>
     const sceneEl    = document.querySelector('a-scene');
     const playBtn    = document.getElementById('playBtn');
-    const videoReal  = document.getElementById('video-real');   // <video> HTML
-    const videoPlane = document.getElementById('video-plane');  // <a-video> en la escena
+    const videoReal  = document.getElementById('video-real');
+    const videoPlane = document.getElementById('video-plane');
 
-    // Cuando la escena de A-Frame + MindAR termina de cargar
+    // Cuando la escena carga
     sceneEl.addEventListener('loaded', () => {
       const target = document.querySelector('[mindar-image-target]');
 
-      // Cuando MindAR detecta la imagen (target.png)
+      // Cuando MindAR detecta la imagen
       target.addEventListener('targetFound', () => {
-        playBtn.style.display = 'block';   // Mostrar botón
+        playBtn.style.display = 'block';
       });
 
-      // Cuando se pierde la imagen
+      // Cuando MindAR pierde la imagen
       target.addEventListener('targetLost', () => {
         playBtn.style.display = 'none';
         videoReal.pause();
@@ -118,19 +118,14 @@
       });
     });
 
-    // Al tocar el botón PLAY
+    // Botón PLAY
     playBtn.addEventListener('click', async () => {
       try {
-        // Nos aseguramos que el video esté sin mute
         videoReal.muted = false;
-
-        // Esto cuenta como interacción del usuario, debería permitir sonido
         await videoReal.play();
-
-        videoPlane.setAttribute('visible', true); // Se ve el video sobre la foto
-        playBtn.style.display = 'none';           // Ocultamos el botón mientras se reproduce
+        videoPlane.setAttribute('visible', true);
+        playBtn.style.display = 'none';
       } catch (e) {
-        // Si algo falla, al menos te avisamos en pantalla
         alert('El navegador no pudo reproducir el video. Prueba con otro MP4 más corto o diferente.');
         console.log('Error al intentar reproducir el video:', e);
       }
@@ -138,9 +133,9 @@
 
     // Cuando termina el video
     videoReal.addEventListener('ended', () => {
-      videoPlane.setAttribute('visible', false);  // Ocultamos el plano
-      playBtn.style.display = 'block';            // Volvemos a mostrar el botón
-      videoReal.currentTime = 0;                  // Rebobinamos
+      videoPlane.setAttribute('visible', false);
+      playBtn.style.display = 'block';
+      videoReal.currentTime = 0;
     });
   </script>
 </body>
