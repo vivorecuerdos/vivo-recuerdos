@@ -1,78 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>VIVO RECUERDOS</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  <style>
-    #playBtn {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90px; height: 90px;
-      background: #FFD700;           /* amarillo oro */
-      border-radius: 50%;
-      font-size: 50px;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      z-index: 999;
-      cursor: pointer;
-    }
-    #playBtn::before { content: "▶"; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VivoRecuerdos</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        /* El botón grande personalizado */
+        #playButton {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.4s;
+        }
+        #playButton::before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 30px solid white;
+            border-top: 20px transparent solid;
+            border-bottom: 20px transparent solid;
+            margin-left: 8px;
+        }
+        /* Ocultar el botón cuando el vídeo empieza */
+        .playing #playButton {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body style="margin:0; overflow:hidden; background:black;">
+<body>
+    <!-- Cambia "hbd.mp4" por el nombre exacto de tu vídeo -->
+    <video id="video" src="hbd.mp4" playsinline></video>
 
-  <div id="playBtn"></div>
+    <button id="playButton"></button>
 
-  <a-scene embedded arjs="trackingMethod:best; sourceType:webcam; debugUIEnabled:false;">
+    <script>
+        const video = document.getElementById('video');
+        const playButton = document.getElementById('playButton');
 
-    <a-marker preset="hiro">
-      <a-video id="video"
-               src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4"
-               rotation="-90 0 0"
-               position="0 0 0.01"
-               width="2.56" height="1.44"
-               playsinline webkit-playsinline>
-      </a-video>
-    </a-marker>
+        playButton.addEventListener('click', () => {
+            video.play();
+            document.body.classList.add('playing');
+        });
 
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <script>
-    const video = document.getElementById('video');
-    const btn   = document.getElementById('playBtn');
-
-    // Ocultar botón al inicio
-    btn.style.display = 'none';
-
-    // Cuando detecta el marcador → mostrar botón
-    document.querySelector('a-marker').addEventListener('markerFound', () => {
-      btn.style.display = 'flex';
-    });
-
-    // Cuando pierde el marcador → ocultar botón y pausar
-    document.querySelector('a-marker').addEventListener('markerLost', () => {
-      btn.style.display = 'none';
-      video.pause();
-    });
-
-    // Al tocar el botón → reproducir y ocultar botón
-    btn.addEventListener('click', () => {
-      video.play();
-      btn.style.display = 'none';
-    });
-
-    // Cuando termina el video → volver a mostrar botón
-    video.addEventListener('ended', () => {
-      btn.style.display = 'flex';
-    });
-  </script>
+        // Si por alguna razón el usuario interactúa con la pantalla también puede iniciar
+        document.body.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                document.body.classList.add('playing');
+            }
+        });
+    </script>
 </body>
 </html>
