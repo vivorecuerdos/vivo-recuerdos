@@ -8,19 +8,22 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
     body{margin:0;overflow:hidden;background:#000}
-    #playBtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    #playBtn{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
       width:90px;height:90px;background:red;border-radius:50%;border:none;
-      color:white;font-size:36px;display:none;z-index:99}
+      color:white;font-size:36px;display:none;z-index:99;cursor:pointer;
+    }
     #playBtn::after{content:"▶";margin-left:8px}
   </style>
 </head>
 <body>
   <button id="playBtn">PLAY</button>
 
-  <a-scene embedded mindar-image="imageTargetSrc: target.mind;" 
+  <a-scene embedded mindar-image="imageTargetSrc: target.png.mind; filterMinCF:0.0001; filterBeta:1000;" 
            vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
+    
     <a-assets>
-      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline></video>
+      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline loop="false"></video>
     </a-assets>
 
     <a-camera></a-camera>
