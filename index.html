@@ -6,26 +6,26 @@
   <title>VIVO RECUERDOS • Álbum Mágico</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar-nft.js"></script>
-  <style>
-    body{margin:0;background:white;font-family:Arial;text-align:center;padding:20px;color:#333;}
-    h1{color:#e91e63;font-size:2.5em;}
-    .btn{background:#e91e63;color:white;padding:15px 30px;border-radius:50px;text-decoration:none;font-size:1.2em;margin:15px;}
-  </style>
 </head>
-<body>
-  <h1>❤️ VIVO RECUERDOS</h1>
-  <p>Apunta al patrón HIRO impreso (10×10 cm)</p>
-  <a href="https://jeromeetienne.github.io/AR.js/data/images/hiro.png" class="btn" download>↓ DESCARGAR PATRÓN HIRO</a>
+<body style="margin:0;overflow:hidden;background:white">
+  <h1 style="position:absolute;top:10px;left:0;right:0;z-index:10;color:#e91e63;text-align:center;font-size:2.5em">
+    ❤️ VIVO RECUERDOS
+  </h1>
+  <a href="https://jeromeetienne.github.io/AR.js/data/images/hiro.png" download 
+     style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:#e91e63;color:white;padding:15px 30px;border-radius:50px;text-decoration:none;z-index:10">
+     ↓ DESCARGAR PATRÓN
+  </a>
 
-  <a-scene embedded arjs="trackingMethod:best; sourceType:webcam; debugUIEnabled:false;">
+  <a-scene embedded arjs="trackingMethod:best;sourceType:webcam;debugUIEnabled:false;">
     
-    <!-- Marcador Hiro (ahora agarra al instante) -->
     <a-marker preset="hiro">
-      <a-plane rotation="-90 0 0" width="2" height="2" color="white">
-        <a-video src="https://www.youtube.com/embed/3r6U-y8z3Yk?autoplay=1&loop=1&playlist=3r6U-y8z3Yk" 
-                 width="1.8" height="1" position="0 0.3 0.05"></a-video>
-        <a-text value="¡VIVO RECUERDOS!" align="center" color="#e91e63" position="0 -0.4 0"></a-text>
-      </a-plane>
+      <!-- Video que NUNCA se bloquea -->
+      <a-video src="https://player.vimeo.com/video/76979871?autoplay=1&loop=1&muted=0&background=1" 
+               width="2" height="1.125" position="0 0.4 0" rotation="-90 0 0" 
+               webkit-playsinline playsinline autoplay loop></a-video>
+      
+      <a-text value="¡PRIMER RECUERDO!" color="#e91e63" align="center" 
+              position="0 -0.2 0" scale="1.5 1.5 1.5"></a-text>
     </a-marker>
 
     <a-entity camera></a-entity>
