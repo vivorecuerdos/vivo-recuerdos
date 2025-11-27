@@ -4,65 +4,136 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>VivoRecuerdos</title>
+
+  <!-- A-Frame y MindAR -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
   <style>
-    body{margin:0;overflow:hidden;background:#000}
-    #playBtn{
-      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-      width:90px;height:90px;background:red;border-radius:50%;border:none;
-      color:white;font-size:36px;display:none;z-index:99;cursor:pointer;
+    body{
+      margin:0;
+      overflow:hidden;
+      background:#000;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    #playBtn::after{content:"▶";margin-left:8px}
+    #playBtn{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      width:90px;
+      height:90px;
+      background:red;
+      border-radius:50%;
+      border:none;
+      color:white;
+      font-size:32px;
+      display:none;
+      z-index:99;
+      cursor:pointer;
+      box-shadow:0 0 20px rgba(0,0,0,0.6);
+    }
+    #playBtn::after{
+      content:"▶";
+      margin-left:8px;
+    }
+    #hint{
+      position:absolute;
+      top:10px;
+      left:10px;
+      color:white;
+      font-size:12px;
+      z-index:50;
+      text-shadow:0 0 5px #000;
+    }
   </style>
 </head>
 <body>
+  <!-- Texto de ayuda -->
+  <div id="hint">Apunta la cámara a la imagen del álbum. Cuando veas el botón rojo, tócalo para reproducir el video.</div>
+
+  <!-- Botón de PLAY personalizado -->
   <button id="playBtn">PLAY</button>
 
-  <a-scene embedded mindar-image="imageTargetSrc: target.png.mind; filterMinCF:0.0001; filterBeta:1000;" 
-           vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
-    
+  <!-- Escena AR -->
+  <a-scene
+    embedded
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false"
+    mindar-image="imageTargetSrc: target.png.mind; filterMinCF:0.0001; filterBeta:1000;"
+  >
+    <!-- Activos (tu video real) -->
     <a-assets>
-      <video id="vid" src="video.mp4" preload="auto" playsinline webkit-playsinline loop="false" muted="false"></video>
+      <!-- ESTE es el <video> REAL que suena -->
+      <video
+        id="video-real"
+        src="video.mp4"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        crossorigin="anonymous"
+      ></video>
     </a-assets>
 
-    <a-camera></a-camera>
+    <!-- Cámara -->
+    <a-camera position="0 0 0"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex:0">
-      <a-video src="#vid" width="1" height="0.75" position="0 0 0.05" 
-               rotation="0 0 0" visible="false" id="myvideo"></a-video>
+    <!-- Target de MindAR: se engancha a target.png / target.png.mind -->
+    <a-entity mindar-image-target="targetIndex: 0">
+      <!-- Plano donde se pinta el video encima de la foto -->
+      <a-video
+        id="video-plane"
+        src="#video-real"
+        width="1"
+        height="0.75"
+        position="0 0 0.05"
+        rotation="0 0 0"
+        visible="false"
+      ></a-video>
     </a-entity>
   </a-scene>
 
   <script>
-    const sceneEl = document.querySelector('a-scene');
-    const playBtn = document.getElementById("playBtn");
-    const videoEl = document.getElementById("vid");
-    const videoEntity = document.getElementById("myvideo");
+    const sceneEl      = document.querySelector('a-scene');
+    const playBtn      = document.getElementById('playBtn');
+    const videoReal    = document.getElementById('video-real');   // <video> HTML
+    const videoPlane   = document.getElementById('video-plane');  // <a-video> en la escena
 
-    // Espera a que la escena cargue
+    // Cuando la escena de A-Frame + MindAR termina de cargar
     sceneEl.addEventListener('loaded', () => {
-      const targetEntity = document.querySelector('a-entity[mindar-image-target]');
-      targetEntity.addEventListener('targetFound', () => {
-        playBtn.style.display = "block";
+      const target = document.querySelector('[mindar-image-target]');
+
+      // Cuando MindAR detecta la imagen (target.png)
+      target.addEventListener('targetFound', () => {
+        playBtn.style.display = 'block';   // Mostrar botón
       });
-      targetEntity.addEventListener('targetLost', () => {
-        playBtn.style.display = "none";
-        videoEl.pause();
-        videoEl.currentTime = 0;
-        videoEntity.setAttribute("visible", "false");
+
+      // Cuando se pierde la imagen
+      target.addEventListener('targetLost', () => {
+        playBtn.style.display = 'none';
+        videoReal.pause();
+        videoReal.currentTime = 0;
+        videoPlane.setAttribute('visible', false);
       });
     });
 
-    playBtn.addEventListener("click", () => {
-      videoEl.play();
-      videoEntity.setAttribute("visible", "true");
-      playBtn.style.display = "none";
+    // Al tocar el botón PLAY
+    playBtn.addEventListener('click', async () => {
+      try {
+        // Esto cuenta como interacción del usuario -> permite sonido
+        await videoReal.play();
+        videoPlane.setAttribute('visible', true); // Se ve el video sobre la foto
+        playBtn.style.display = 'none';           // Ocultamos el botón mientras se reproduce
+      } catch (e) {
+        console.log('Error al intentar reproducir el video:', e);
+      }
     });
 
-    videoEl.addEventListener("ended", () => {
-      playBtn.style.display = "block";
-      videoEntity.setAttribute("visible", "false");
+    // Cuando termina el video
+    videoReal.addEventListener('ended', () => {
+      videoPlane.setAttribute('visible', false);  // Ocultamos el plano
+      playBtn.style.display = 'block';            // Volvemos a mostrar el botón
+      videoReal.currentTime = 0;                  // Rebobinamos
     });
   </script>
 </body>
