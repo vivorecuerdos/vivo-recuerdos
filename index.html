@@ -7,69 +7,72 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <style>
-    body { margin:0; overflow:hidden; background:black; }
-    #playButton {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 100px; height: 100px; background: rgba(255,255,255,0.9);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 60px; color: #e91e63; cursor: pointer; z-index: 999;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    #playBtn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90px; height: 90px;
+      background: #FFD700;           /* amarillo oro */
+      border-radius: 50%;
+      font-size: 50px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      z-index: 999;
+      cursor: pointer;
     }
-    #playButton::before { content: "▶"; }
+    #playBtn::before { content: "▶"; }
   </style>
 </head>
-<body>
+<body style="margin:0; overflow:hidden; background:black;">
 
-  <!-- Botón Play grande en el centro -->
-  <div id="playButton"></div>
+  <div id="playBtn"></div>
 
   <a-scene embedded arjs="trackingMethod:best; sourceType:webcam; debugUIEnabled:false;">
 
     <a-marker preset="hiro">
-
-      <!-- Video horizontal perfecto que cubre todo el marcador -->
-      <a-video id="miVideo"
+      <a-video id="video"
                src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4"
                rotation="-90 0 0"
                position="0 0 0.01"
-               width="2.56" height="1.44"   <!-- 16:9 horizontal perfecto -->
-               loop="false"
+               width="2.56" height="1.44"
                playsinline webkit-playsinline>
       </a-video>
-
     </a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    const video = document.getElementById('miVideo');
-    const playBtn = document.getElementById('playButton');
+    const video = document.getElementById('video');
+    const btn   = document.getElementById('playBtn');
 
-    // Cuando detecta el marcador → muestra el botón Play
+    // Ocultar botón al inicio
+    btn.style.display = 'none';
+
+    // Cuando detecta el marcador → mostrar botón
     document.querySelector('a-marker').addEventListener('markerFound', () => {
-      playBtn.style.display = 'block';
+      btn.style.display = 'flex';
     });
 
-    // Cuando pierde el marcador → oculta el botón
+    // Cuando pierde el marcador → ocultar botón y pausar
     document.querySelector('a-marker').addEventListener('markerLost', () => {
-      playBtn.style.display = 'none';
+      btn.style.display = 'none';
       video.pause();
     });
 
-    // Al tocar el botón → reproduce y oculta el botón
-    playBtn.addEventListener('click', () => {
+    // Al tocar el botón → reproducir y ocultar botón
+    btn.addEventListener('click', () => {
       video.play();
-      playBtn.style.display = 'none';
+      btn.style.display = 'none';
     });
 
-    // Cuando termina el video → vuelve a mostrar el botón Play
+    // Cuando termina el video → volver a mostrar botón
     video.addEventListener('ended', () => {
-      playBtn.style.display = 'block';
+      btn.style.display = 'flex';
     });
-
-    // Al cargar la página el botón está oculto hasta detectar el marcador
-    playBtn.style.display = 'none';
   </script>
 </body>
 </html>
