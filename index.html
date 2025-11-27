@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>VIVO RECUERDOS • Álbum Mágico</title>
+  <title>VIVO RECUERDOS</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar-nft.js"></script>
 </head>
@@ -12,28 +12,19 @@
   <h1 style="position:absolute;top:10px;left:0;right:0;z-index:10;color:#e91e63;text-align:center;font-size:2.5em">
     ❤️ VIVO RECUERDOS
   </h1>
-  
-  <a href="https://jeromeetienne.github.io/AR.js/data/images/hiro.png" download 
-     style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:#e91e63;color:white;padding:15px 30px;border-radius:50px;text-decoration:none;z-index:10;font-size:1.2em">
-     ↓ DESCARGAR PATRÓN HIRO
-  </a>
 
   <a-scene embedded arjs="trackingMethod:best;sourceType:webcam;debugUIEnabled:false;">
 
-    <!-- TU VIDEO EXACTO (el que me diste) -->
     <a-marker preset="hiro">
-      <a-plane rotation="-90 0 0" width="2" height="2" color="white">
+      <a-plane rotation="-90 0 0" width="3" height="3" color="white">
         
-        <!-- Video de YouTube con todos los trucos para que SIEMPRE suene y se vea -->
-        <a-entity position="0 0.3 0.01">
-          <iframe width="560" height="315" 
-                  src="https://www.youtube.com/embed/jbDN0nDHWFM?autoplay=1&loop=1&playlist=jbDN0nDHWFM&playsinline=1&mute=0&rel=0" 
-                  frameborder="0" allow="autoplay; fullscreen" 
-                  allowfullscreen></iframe>
-        </a-entity>
+        <!-- VIDEO DESDE TU GITHUB (NUNCA FALLA) -->
+        <a-video src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/videos/primer-recuerdo.mp4" 
+                 autoplay loop playsinline webkit-playsinline 
+                 width="2.4" height="1.35" position="0 0.4 0.01"></a-video>
 
-        <a-text value="¡VIVO RECUERDOS!" color="#e91e63" align="center" 
-                position="0 -0.5 0" scale="2 2 2"></a-text>
+        <a-text value="¡Primer recuerdo!" color="#e91e63" align="center" 
+                position="0 -0.4 0" scale="2 2 1"></a-text>
       </a-plane>
     </a-marker>
 
