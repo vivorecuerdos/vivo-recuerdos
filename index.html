@@ -5,33 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>VIVO RECUERDOS</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar-nft.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin:0;overflow:hidden;background:white">
-
+  
   <h1 style="position:absolute;top:10px;left:0;right:0;z-index:10;color:#e91e63;text-align:center;font-size:2.5em">
     ❤️ VIVO RECUERDOS
   </h1>
+  
+  <p style="position:absolute;bottom:20px;left:0;right:0;z-index:10;text-align:center;font-size:1.2em">
+    Apunta al patrón Hiro (10x10 cm) para ver la magia
+  </p>
 
-  <a-scene embedded arjs="trackingMethod:best;sourceType:webcam;debugUIEnabled:false;">
+  <a-scene embedded arjs="trackingMethod:best; sourceType:webcam; debugUIEnabled:false;">
 
     <a-marker preset="hiro" 
-              smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+              smooth="true" 
+              smoothCount="10" 
+              smoothTolerance="0.01" 
+              smoothThreshold="5">
+      
+      <!-- Video overlay directo sobre el marcador (sin fondo, sin texto, proporción 16:9 perfecta) -->
+      <a-video src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4" 
+               width="2.56" height="1.44"  <!-- 16:9 exacto, no desproporcionado -->
+               position="0 0 0"  <!-- Pegado al centro del marcador -->
+               rotation="0 0 0"  <!-- No se da vuelta, siempre al derecho -->
+               autoplay="false"  <!-- NO inicia al cargar, solo al detectar -->
+               loop muted playsinline webkit-playsinline 
+               monitor="event-set__enter: visible:true; _event:loadeddata; play; _event:visibilitychange; pause"  <!-- Solo suena al detectar -->
+               material="side: double; opacity:1">  <!-- Transparente, solo el video -->
+      </a-video>
 
-      <!-- Video perfecto: proporción 16:9, centrado y estable -->
-      <a-video src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4"
-               autoplay loop playsinline webkit-playsinline
-               width="2.56" height="1.44"   <!-- 16:9 perfecto -->
-               position="0 0.4 0.05"
-               rotation="-90 0 0"
-               material="side: double"></a-video>
-
-      <a-text value="¡Tu recuerdo cobra vida!"
-              color="#e91e63" align="center"
-              position="0 -0.4 0" scale="2 2 1"></a-text>
     </a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    // Lógica para que el sonido inicie SOLO al detectar el marcador
+    document.addEventListener('DOMContentLoaded', () => {
+      const marker = document.querySelector('a-marker');
+      const video = document.querySelector('a-video');
+      
+      marker.addEventListener('markerFound', () => {
+        video.play();  // Inicia video y sonido al detectar
+      });
+      
+      marker.addEventListener('markerLost', () => {
+        video.pause();  // Pausa al perder el marcador
+      });
+    });
+  </script>
 </body>
 </html>
