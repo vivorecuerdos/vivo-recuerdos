@@ -50,7 +50,9 @@
 </head>
 <body>
   <!-- Texto de ayuda -->
-  <div id="hint">Apunta la cámara a la imagen del álbum. Cuando veas el botón rojo, tócalo para reproducir el video.</div>
+  <div id="hint">
+    Apunta la cámara a la imagen del álbum. Cuando salga el botón rojo, tócalo para reproducir el video.
+  </div>
 
   <!-- Botón de PLAY personalizado -->
   <button id="playBtn">PLAY</button>
@@ -64,7 +66,6 @@
   >
     <!-- Activos (tu video real) -->
     <a-assets>
-      <!-- ESTE es el <video> REAL que suena -->
       <video
         id="video-real"
         src="video.mp4"
@@ -94,10 +95,10 @@
   </a-scene>
 
   <script>
-    const sceneEl      = document.querySelector('a-scene');
-    const playBtn      = document.getElementById('playBtn');
-    const videoReal    = document.getElementById('video-real');   // <video> HTML
-    const videoPlane   = document.getElementById('video-plane');  // <a-video> en la escena
+    const sceneEl    = document.querySelector('a-scene');
+    const playBtn    = document.getElementById('playBtn');
+    const videoReal  = document.getElementById('video-real');   // <video> HTML
+    const videoPlane = document.getElementById('video-plane');  // <a-video> en la escena
 
     // Cuando la escena de A-Frame + MindAR termina de cargar
     sceneEl.addEventListener('loaded', () => {
@@ -120,11 +121,17 @@
     // Al tocar el botón PLAY
     playBtn.addEventListener('click', async () => {
       try {
-        // Esto cuenta como interacción del usuario -> permite sonido
+        // Nos aseguramos que el video esté sin mute
+        videoReal.muted = false;
+
+        // Esto cuenta como interacción del usuario, debería permitir sonido
         await videoReal.play();
+
         videoPlane.setAttribute('visible', true); // Se ve el video sobre la foto
         playBtn.style.display = 'none';           // Ocultamos el botón mientras se reproduce
       } catch (e) {
+        // Si algo falla, al menos te avisamos en pantalla
+        alert('El navegador no pudo reproducir el video. Prueba con otro MP4 más corto o diferente.');
         console.log('Error al intentar reproducir el video:', e);
       }
     });
