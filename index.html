@@ -8,24 +8,27 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar-nft.js"></script>
 </head>
 <body style="margin:0;overflow:hidden;background:white">
-  
+
   <h1 style="position:absolute;top:10px;left:0;right:0;z-index:10;color:#e91e63;text-align:center;font-size:2.5em">
     ❤️ VIVO RECUERDOS
   </h1>
 
   <a-scene embedded arjs="trackingMethod:best;sourceType:webcam;debugUIEnabled:false;">
 
-    <a-marker preset="hiro">
-      <a-plane rotation="-90 0 0" width="3" height="3" color="white">
-        
-        <!-- TU VIDEO DESDE GITHUB (funciona al 100 %) -->
-        <a-video src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4" 
-                 autoplay loop muted playsinline webkit-playsinline 
-                 width="2.7" height="1.52" position="0 0.4 0.01"></a-video>
+    <a-marker preset="hiro" 
+              smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
 
-        <a-text value="¡Tu primer recuerdo cobra vida!" 
-                color="#e91e63" align="center" position="0 -0.5 0" scale="2 2 1"></a-text>
-      </a-plane>
+      <!-- Video perfecto: proporción 16:9, centrado y estable -->
+      <a-video src="https://raw.githubusercontent.com/vivorecuerdos/vivo-recuerdos/main/primer-recuerdo.mp4"
+               autoplay loop playsinline webkit-playsinline
+               width="2.56" height="1.44"   <!-- 16:9 perfecto -->
+               position="0 0.4 0.05"
+               rotation="-90 0 0"
+               material="side: double"></a-video>
+
+      <a-text value="¡Tu recuerdo cobra vida!"
+              color="#e91e63" align="center"
+              position="0 -0.4 0" scale="2 2 1"></a-text>
     </a-marker>
 
     <a-entity camera></a-entity>
